@@ -80,7 +80,7 @@ plugin, so a project allows one plugin, whatever the number of children:
 
 omniscient/omnibase (4.0) is the first real one: its stub providers
 (`Base\Bridge\Composer\Stub\*`, the `App\` stubs of `Base\Entity`, `Enum`, `Form`,
-`Notifier`, `Repository`, `Set`) and its patch of symfony/process are declared in its
+`Notifier` and `Repository`) and its patch of symfony/process are declared in its
 `composer.json`.
 
 ## Tests
