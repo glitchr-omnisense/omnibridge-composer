@@ -46,7 +46,7 @@ installed (and the root), in `extra.omnibridge`:
   its target fails the command with its id and its `why`, unless it says
   `"optional": true`. A package installed as a symbolic link (a path repository)
   is never patched. The vocabulary - `replace`, `prepend`, `append`, `erase`,
-  `unfinal`, `visibility`, `default` - and `"class"` for what it cannot say:
+  `unfinal`, `visibility`, `default`, `returns` - and `"class"` for what it cannot say:
   [docs/patches.md](docs/patches.md).
 - **The record** - `vendor/composer/omnibridge/patches.json`: each patched file,
   its package and version, the patches applied in order, the SHA-256 of the file

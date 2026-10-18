@@ -163,6 +163,21 @@ final class OperationsTest extends TestCase
         self::apply(['default' => "'UTC'", 'of' => 'Acme\Clock\Clock::__construct($zone)']);
     }
 
+    public function testReturnTypeOfAMethodAndOfAFunction(): void
+    {
+        $code = self::apply(['returns' => 'never', 'of' => ['Acme\\Clock\\Clock::setTimeout()', 'Acme\\Clock\\tick()']]);
+        $this->assertStringContainsString('private function setTimeout(?float $timeout): never', $code);
+        $this->assertStringContainsString('function tick(int $every = 1): never', $code);
+        $this->assertStringContainsString('    function now(): string', $code);
+    }
+
+    public function testReturnTypeAlreadyThere(): void
+    {
+        $this->expectException(TargetNotFound::class);
+        $this->expectExceptionMessage('already returns string');
+        self::apply(['returns' => 'string', 'of' => 'Acme\\Clock\\Clock::now()']);
+    }
+
     public function testEverythingElseOfTheFileKeepsItsBytes(): void
     {
         $code = self::apply(['default' => 'null', 'of' => 'Acme\Clock\Clock::__construct($timeout)']);
@@ -178,6 +193,7 @@ final class OperationsTest extends TestCase
         yield 'unfinal' => [['unfinal' => 'Acme\Clock\Nowhere'], 'class Acme\Clock\Nowhere not found'];
         yield 'visibility' => [['visibility' => 'protected', 'of' => 'Acme\Clock\Clock::$nowhere'], 'Acme\Clock\Clock::$nowhere not found'];
         yield 'default' => [['default' => 'null', 'of' => 'Acme\Clock\Clock::now($x)'], 'has no parameter $x'];
+        yield 'returns' => [['returns' => 'void', 'of' => 'Acme\Clock\Clock::__construct()'], 'declares no return type'];
     }
 
     /** @param array<string, mixed> $declaration */

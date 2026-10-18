@@ -23,6 +23,7 @@ abstract class Operation
         'unfinal' => Unfinal::class,
         'visibility' => Visibility::class,
         'default' => DefaultValue::class,
+        'returns' => ReturnType::class,
     ];
 
     /** @throws TargetNotFound */

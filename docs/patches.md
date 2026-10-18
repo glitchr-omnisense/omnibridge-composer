@@ -130,6 +130,17 @@ visibility is not found.
 The parameter's default value replaced by the expression, written as PHP. A
 parameter without a default, or that already defaults to it, is not found.
 
+### `returns` (AST)
+
+```json
+{ "returns": "void", "of": "Vendor\\Package\\Class::method()" }
+{ "returns": "?string", "of": ["Class::a()", "Vendor\\Package\\function()"] }
+```
+
+The declared return type replaced, written as PHP - for a subclass whose
+override PHP refuses (a parent's `never` where the child returns `void`). A
+method without a declared return type, or that already returns it, is not found.
+
 ### `class`
 
 ```json
