@@ -1,0 +1,11 @@
+# docker compose run --rm example
+services:
+  example:
+    build: ../../docker
+    image: omnibridge-composer:php8.4
+    volumes:
+      - ../..:/engine:ro
+      - composer-cache:/tmp/composer/cache
+    command: sh /engine/examples/child-plugin/run.sh
+volumes:
+  composer-cache:

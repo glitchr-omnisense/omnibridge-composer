@@ -1,0 +1,30 @@
+{
+    "name": "acme/child-plugin",
+    "description": "The smallest omnibridge/composer child: one patch and one stub provider, declared in extra.omnibridge. A plain package - only the engine is a Composer plugin.",
+    "type": "library",
+    "version": "1.0.0",
+    "license": "MIT",
+    "require": {
+        "omnibridge/composer": "1.x-dev"
+    },
+    "autoload": { "psr-4": { "Acme\\Child\\": "src/" } },
+    "extra": {
+        "omnibridge": {
+            "patches": [
+                {
+                    "id": "greeter-in-french",
+                    "package": "acme/greeter",
+                    "versions": "^1.0",
+                    "file": "src/Greeter.php",
+                    "why": "The demo greets in French and extends Greeter, which acme/greeter ships final.",
+                    "upstream": "https://example.org/acme/greeter/issues/1",
+                    "do": [
+                        { "unfinal": "Acme\\Greeter\\Greeter" },
+                        { "default": "'Bonjour'", "of": "Acme\\Greeter\\Greeter::__construct($greeting)" }
+                    ]
+                }
+            ],
+            "stubs": ["Acme\\Child\\Stub\\GreeterStub"]
+        }
+    }
+}

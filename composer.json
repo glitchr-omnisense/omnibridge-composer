@@ -1,0 +1,23 @@
+{
+    "name": "omnibridge/composer",
+    "description": "A Composer plugin that knows no package: the patches and the stub providers the installed packages declare in extra.omnibridge, applied after install and update, restored when they no longer apply, recorded with checksums and checked in CI.",
+    "type": "composer-plugin",
+    "keywords": ["composer", "plugin", "patch", "stub", "omnibridge"],
+    "homepage": "https://github.com/glitchr-studio/omnibridge-composer",
+    "license": "MIT",
+    "authors": [{ "name": "Marco Meyer" }],
+    "require": {
+        "php": ">=8.2",
+        "composer-plugin-api": "^2.3",
+        "nikic/php-parser": "^5.0"
+    },
+    "require-dev": {
+        "composer/composer": "^2.3",
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload": { "psr-4": { "Omnibridge\\Composer\\": "src/" } },
+    "autoload-dev": { "psr-4": { "Omnibridge\\Composer\\Tests\\": "tests/" } },
+    "config": { "sort-packages": true },
+    "scripts": { "test": "phpunit" },
+    "extra": { "class": "Omnibridge\\Composer\\Plugin" }
+}

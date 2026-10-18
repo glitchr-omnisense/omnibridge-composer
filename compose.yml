@@ -1,0 +1,11 @@
+# The test suite: docker compose run --rm test
+services:
+  test:
+    build: docker
+    image: omnibridge-composer:php8.4
+    volumes:
+      - .:/engine
+      - composer-cache:/tmp/composer/cache
+    command: sh -c "composer install --no-progress && vendor/bin/phpunit"
+volumes:
+  composer-cache:

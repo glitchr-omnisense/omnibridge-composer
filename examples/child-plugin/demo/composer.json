@@ -1,0 +1,20 @@
+{
+    "name": "acme/demo",
+    "description": "A project that requires acme/greeter, then the child that patches it.",
+    "type": "project",
+    "license": "MIT",
+    "repositories": [
+        { "type": "path", "url": "/engine", "options": { "symlink": true, "versions": { "omnibridge/composer": "1.x-dev" } } },
+        { "type": "path", "url": "/engine/examples/child-plugin/packages/child", "options": { "symlink": true } },
+        { "type": "path", "url": "/engine/examples/child-plugin/packages/greeter", "options": { "symlink": false } }
+    ],
+    "require": {
+        "acme/greeter": "^1.0"
+    },
+    "autoload": { "psr-4": { "App\\": "src/" } },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": { "omnibridge/composer": true }
+    }
+}
