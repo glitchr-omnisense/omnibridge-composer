@@ -175,7 +175,7 @@ others; it must be a function of the published content (no date, nothing random)
             "path": "vendor/symfony/process/Process.php",
             "before": "sha256:...",
             "after": "sha256:...",
-            "patches": ["omniscient/omnibase:process-timeout-from-env"]
+            "patches": ["omnisense/omnibase:process-timeout-from-env"]
         }
     }
 }

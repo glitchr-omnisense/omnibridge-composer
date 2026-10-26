@@ -3,7 +3,7 @@
     "description": "A Composer plugin that knows no package: the patches and the stub providers the installed packages declare in extra.omnibridge, applied after install and update, restored when they no longer apply, recorded with checksums and checked in CI.",
     "type": "composer-plugin",
     "keywords": ["composer", "plugin", "patch", "stub", "omnibridge"],
-    "homepage": "https://github.com/glitchr-studio/omnibridge-composer",
+    "homepage": "https://github.com/glitchr-omnisense/omnibridge-composer",
     "license": "MIT",
     "authors": [{ "name": "Marco Meyer" }],
     "require": {

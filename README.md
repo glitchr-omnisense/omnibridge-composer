@@ -1,7 +1,7 @@
 # omnibridge/composer
 
 ```sh
-git clone https://github.com/glitchr-studio/omnibridge-composer.git
+git clone https://github.com/glitchr-omnisense/omnibridge-composer.git
 cd omnibridge-composer/examples/child-plugin
 docker compose run --rm example
 ```
@@ -78,7 +78,7 @@ plugin, so a project allows one plugin, whatever the number of children:
 "config": { "allow-plugins": { "omnibridge/composer": true } }
 ```
 
-omniscient/omnibase (4.0) is the first real one: its stub providers
+omnisense/omnibase (4.0) is the first real one: its stub providers
 (`Base\Bridge\Composer\Stub\*`, the `App\` stubs of `Base\Entity`, `Enum`, `Form`,
 `Notifier` and `Repository`) and its patch of symfony/process are declared in its
 `composer.json`.
