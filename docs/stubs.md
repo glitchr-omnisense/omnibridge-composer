@@ -1,3 +1,8 @@
+---
+title: Stubs
+order: 30
+---
+
 # Stubs
 
 A package declares stub providers in `extra.omnibridge.stubs`: class names,

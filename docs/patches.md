@@ -1,3 +1,8 @@
+---
+title: Patches
+order: 20
+---
+
 # Patches
 
 A patch is declared by the package that needs it (or by the root), never by the
@@ -46,7 +51,9 @@ order. A file that no patch applies to any more is written back as published:
 - the engine itself was removed (it writes everything back on uninstall).
 
 A target installed as a symbolic link (a path repository with `"symlink": true`)
-is never patched: that would change its source. It is reported as skipped.
+is never patched: that would change its source. It is reported as skipped. The root
+package declares patches (as `__root__`) but is never a target: a patch whose
+`package` is the root's name is skipped as "not installed".
 
 ## Strict
 
@@ -55,7 +62,8 @@ change is already there (a parameter that already defaults to the value, a class
 that is no longer final): a patch that has become useless says so, which is how
 its declaring package learns to drop it or narrow `versions`. A failure stops the
 command (`install`, `update`...) with the patch's name, what was not found and the
-patch's `why`; the file is left as published. `"optional": true` turns it into a
+patch's `why`; the failed patch is left out of the file, which keeps the other patches that apply to
+it, or its published content when none does. `"optional": true` turns it into a
 skip.
 
 ## The vocabulary

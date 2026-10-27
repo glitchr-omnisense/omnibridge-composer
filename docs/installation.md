@@ -1,0 +1,190 @@
+---
+title: Installation
+order: 10
+---
+
+# Installation
+
+## Requirements
+
+| Package | Version | Why |
+|---|---|---|
+| PHP | 8.2 or later | |
+| `composer-plugin-api` | ^2.3 | Composer 2.3 or later |
+| `nikic/php-parser` | ^5.0 | the AST operations (`unfinal`, `visibility`, `default`, `returns`) |
+
+The package is of type `composer-plugin`, its class `Omnibridge\Composer\Plugin` (`extra.class`).
+Composer asks before running a plugin: allow it once, in the project's root.
+
+```json
+{
+    "config": {
+        "allow-plugins": { "omnibridge/composer": true }
+    }
+}
+```
+
+A project rarely requires it itself: a child requires it (omnisense/omnibase does), and Composer
+installs it with the child. A child is never a plugin, so one entry in `allow-plugins` covers them all.
+
+```sh
+composer require omnibridge/composer
+```
+
+Without the plugin allowed (or with `composer install --no-plugins`), nothing is patched and no stub
+is written; `composer omnibridge:patches --apply` and `composer omnibridge:stubs` do it afterwards.
+
+## The example, run
+
+`examples/child-plugin/run.sh` drives a project (`demo/`) through the whole life of a patch:
+`acme/greeter` 1.2.0 installed alone, `acme/child-plugin` required (it requires the engine and
+declares the patch `greeter-in-french` and the stub provider `GreeterStub`), the listing, the diff,
+the stubs, the program, both checks, a second install, the child removed.
+
+```sh
+cd examples/child-plugin
+docker compose run --rm example
+```
+
+Run on 2026-10-27 in the image `omnibridge-composer:php8.4`, with no network: the script as it is
+needs Packagist for `nikic/php-parser`, so the demo's `composer.json` was given two more repositories
+first - the engine's own `vendor/nikic/php-parser` (5.9.0) as a path repository, and
+`"packagist.org": false`. Everything else is the script's. Its output, the lines about Packagist's
+unreachable advisories left out:
+
+```text
+
+== 1. composer install: acme/greeter 1.2.0 alone (Greeter final, 'Hello')
+No composer.lock file present. Updating dependencies to latest instead of installing from lock file. See https://getcomposer.org/install for more information.
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 1 install, 0 updates, 0 removals
+  - Locking acme/greeter (1.2.0)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 1 install, 0 updates, 0 removals
+  - Installing acme/greeter (1.2.0): Mirroring from /engine/examples/child-plugin/packages/greeter
+Generating autoload files
+  (new Greeter())->greet("world"): Hello, world.
+  Greeter is final: App\LoudGreeter cannot extend it
+
+== 2. composer require acme/child-plugin (requires omnibridge/composer; declares a patch and a stub provider)
+./composer.json has been updated
+Running composer update acme/child-plugin
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 3 installs, 0 updates, 0 removals
+  - Locking acme/child-plugin (1.0.0)
+  - Locking nikic/php-parser (5.9.0)
+  - Locking omnibridge/composer (1.x-dev 58d0450)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 3 installs, 0 updates, 0 removals
+  - Installing nikic/php-parser (5.9.0): Mirroring from /engine/vendor/nikic/php-parser
+  - Installing omnibridge/composer (1.x-dev 58d0450): Symlinking from /engine
+  - Installing acme/child-plugin (1.0.0): Symlinking from /engine/examples/child-plugin/packages/child
+Generating autoload files
+omnibridge/composer: stubs Greeter 1 (vendor/composer/omnibridge/stubs)
+omnibridge/composer: patches
+  applied   acme/child-plugin:greeter-in-french - unfinal Acme\Greeter\Greeter; default Acme\Greeter\Greeter::__construct($greeting) = 'Bonjour'
+omnibridge/composer: stubs Greeter 2 (vendor/composer/omnibridge/stubs)
+No security vulnerability advisories found.
+
+== composer omnibridge:patches
+1 declared
+applied (1)
+  acme/child-plugin:greeter-in-french
+    acme/greeter src/Greeter.php (versions ^1.0)
+    why: The demo greets in French and extends Greeter, which acme/greeter ships final.
+    upstream: https://example.org/acme/greeter/issues/1
+    unfinal Acme\Greeter\Greeter; default Acme\Greeter\Greeter::__construct($greeting) = 'Bonjour'
+
+== composer omnibridge:patches --diff
+--- a/acme/greeter/src/Greeter.php
++++ b/acme/greeter/src/Greeter.php
+@@ -5,11 +5,10 @@
+ /**
+  * Says hello.
+  *
+- * @final
+  */
+-final class Greeter
++class Greeter
+ {
+-    public function __construct(private string $greeting = 'Hello')
++    public function __construct(private string $greeting = 'Bonjour')
+     {
+     }
+ 
+
+== the stubs (vendor/composer/omnibridge/stubs, never autoloaded)
+vendor/composer/omnibridge/stubs/Greeter/Greeter.php
+vendor/composer/omnibridge/stubs/Greeter/Salutation.php
+<?php
+
+namespace App\Greeter;
+
+/**
+ * Generated by omnibridge/composer (Acme\Child\Stub\GreeterStub) for an IDE and static
+ * analysis: at run time App\Greeter\Greeter is Acme\Greeter\Greeter unless the application
+ * defines it. Never autoloaded; rewritten at every composer dump-autoload.
+ */
+
+if (!class_exists('\App\Greeter\Greeter')) {
+    class Greeter extends \Acme\Greeter\Greeter {}
+}
+
+== the program, with the patch
+  (new Greeter())->greet("world"): Bonjour, world.
+  (new App\LoudGreeter())->greet("world"): BONJOUR, WORLD.
+
+== composer omnibridge:patches --check, composer omnibridge:stubs --check
+omnibridge:patches --check: 1 patch(es) applied as recorded, vendor/ as declared
+omnibridge:stubs --check: Greeter 2
+
+== 3. composer install again: nothing changes
+Installing dependencies from lock file (including require-dev)
+Verifying lock file contents can be installed on current platform.
+Nothing to install, update or remove
+Generating autoload files
+omnibridge/composer: stubs Greeter 2 (vendor/composer/omnibridge/stubs)
+omnibridge/composer: patches
+  applied   acme/child-plugin:greeter-in-french - unfinal Acme\Greeter\Greeter; default Acme\Greeter\Greeter::__construct($greeting) = 'Bonjour'
+  vendor/acme and the record: identical, byte for byte
+
+== 4. composer remove acme/child-plugin: the patch is taken back
+./composer.json has been updated
+Running composer update acme/child-plugin
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 0 installs, 0 updates, 3 removals
+  - Removing acme/child-plugin (1.0.0)
+  - Removing nikic/php-parser (5.9.0)
+  - Removing omnibridge/composer (1.x-dev 58d0450)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 0 installs, 0 updates, 3 removals
+omnibridge/composer: acme/greeter/src/Greeter.php written back as published
+  - Removing omnibridge/composer (1.x-dev 58d0450)
+  - Removing nikic/php-parser (5.9.0)
+  - Removing acme/child-plugin (1.0.0)
+Generating autoload files
+No security vulnerability advisories found.
+  (new Greeter())->greet("world"): Hello, world.
+  Greeter is final: App\LoudGreeter cannot extend it
+  vendor/acme/greeter: as published
+  vendor/composer/omnibridge: gone
+
+== done
+```
+
+What it shows:
+
+- After `require`, the stubs are written twice: once after the autoloader is dumped (`Greeter 1`:
+  `Greeter` is still final, only `Salutation` gets a stub), once more after the patches changed a
+  file (`Greeter 2`: `Greeter` is no longer final).
+- `omnibridge/composer` and `acme/child-plugin` are symlinked path packages (never patched
+  themselves); `acme/greeter` is mirrored (`"symlink": false`), so it can be patched.
+- A second `composer install` leaves `vendor/acme` and the record identical, byte for byte.
+- Removing the child writes `Greeter.php` back as published, and the engine, removed with it,
+  removes `vendor/composer/omnibridge`.
