@@ -18,7 +18,7 @@ and went through every step, its output pasted in [Installation](installation.md
 - omnisense/omnibase 4.0, the first real child: its stub providers (`App\` stubs of `Base\Entity`,
   `Enum`, `Form`, `Notifier`, `Repository`) and its patch of symfony/process
   (`process-timeout-from-env`), on its harness and its sites; a site's commit after the Omnisense
-  rename (nakaya-gourmet 732436b, 2026-10-26) states `omnibridge:patches` and
+  rename (a site, 2026-10-26) states `omnibridge:patches` and
   `omnibridge:stubs --check` green.
 
 ## What is not verified
