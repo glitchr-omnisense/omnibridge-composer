@@ -13,6 +13,17 @@ child of this engine - one patch, one stub provider. Composer applies the patch
 greets in French through a subclass, `--check` is green, a second install changes
 nothing, and removing the child gives `acme/greeter` back as published.
 
+## Install
+
+```sh
+composer config allow-plugins.omnibridge/composer true
+composer require omnibridge/composer
+```
+
+A project rarely requires it itself: a child requires it (omnisense/omnibase does),
+and Composer installs it with the child. Only the engine is a plugin, so that one
+`allow-plugins` entry covers every child.
+
 ## What it is
 
 A Composer plugin that knows no package. What it does comes from the packages

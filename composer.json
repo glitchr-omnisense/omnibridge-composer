@@ -19,5 +19,8 @@
     "autoload-dev": { "psr-4": { "Omnibridge\\Composer\\Tests\\": "tests/" } },
     "config": { "sort-packages": true },
     "scripts": { "test": "phpunit" },
-    "extra": { "class": "Omnibridge\\Composer\\Plugin" }
+    "extra": {
+        "class": "Omnibridge\\Composer\\Plugin",
+        "branch-alias": { "dev-1.x": "1.x-dev" }
+    }
 }

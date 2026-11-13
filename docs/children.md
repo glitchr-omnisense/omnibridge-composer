@@ -14,7 +14,7 @@ of provider class names). The root package may declare both too (its patches are
 {
     "name": "acme/child-plugin",
     "type": "library",
-    "require": { "omnibridge/composer": "1.x-dev", "acme/greeter": "^1.0" },
+    "require": { "omnibridge/composer": "^1.0", "acme/greeter": "^1.0" },
     "autoload": { "psr-4": { "Acme\\Child\\": "src/" } },
     "extra": {
         "omnibridge": {
